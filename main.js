@@ -1,16 +1,27 @@
 import { playSound } from "./audio-engine.js";
 import {
+  isRecording,
   record,
-  startRecording,
-  stopRecording,
+  start,
+  stop,
 } from "./beat-recorder.js";
 
-let recording = false;
+const recordButton = document.querySelector("#record-btn");
 
 function triggerPad(pad) {
   playSound(pad.dataset.sound);
   pad.classList.add("active");
   setTimeout(() => pad.classList.remove("active"), 100);
+}
+
+function toggleRecording() {
+  if (isRecording()) {
+    stop();
+  } else {
+    start();
+  }
+
+  recordButton.textContent = isRecording() ? "Recording" : "Record";
 }
 
 window.addEventListener("keydown", (e) => {
@@ -19,14 +30,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "Escape") {
-    if (recording) {
-      recording = false;
-      stopRecording();
-    } else {
-      recording = true;
-      startRecording();
-    }
-
+    toggleRecording();
     return;
   }
 
@@ -40,9 +44,15 @@ window.addEventListener("keydown", (e) => {
   }
 
   record(key);
+  if (!isRecording()) {
+    recordButton.textContent = "Record";
+  }
+
   triggerPad(pad);
 });
 
 document.querySelectorAll(".drum-pad").forEach((pad) => {
   pad.addEventListener("click", () => triggerPad(pad));
 });
+
+recordButton.addEventListener("click", toggleRecording);
