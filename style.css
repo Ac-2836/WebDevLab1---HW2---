@@ -1,0 +1,26 @@
+:root {
+  --page-background: #181818;
+  --pad-background: #333333;
+  --pad-text: #ffffff;
+  --active-pad-background: #d97706;
+}
+
+body {
+  background-color: var(--page-background);
+}
+
+.drum-pad {
+  min-width: 4rem;
+  min-height: 4rem;
+  background-color: var(--pad-background);
+  color: var(--pad-text);
+}
+
+.drum-pad:focus-visible {
+  outline: 3px solid var(--pad-text);
+  outline-offset: 3px;
+}
+
+.drum-pad.active {
+  background-color: var(--active-pad-background);
+}
