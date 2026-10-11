@@ -1,7 +1,26 @@
 import { playSound } from "./audio-engine.js";
+import {
+  record,
+  startRecording,
+  stopRecording,
+} from "./beat-recorder.js";
+
+let recording = false;
 
 window.addEventListener("keydown", (e) => {
   if (e.repeat) {
+    return;
+  }
+
+  if (e.key === "Escape") {
+    if (recording) {
+      recording = false;
+      stopRecording();
+    } else {
+      recording = true;
+      startRecording();
+    }
+
     return;
   }
 
@@ -14,6 +33,7 @@ window.addEventListener("keydown", (e) => {
     return;
   }
 
+  record(key);
   playSound(pad.dataset.sound);
   pad.classList.add("active");
   setTimeout(() => pad.classList.remove("active"), 100);
