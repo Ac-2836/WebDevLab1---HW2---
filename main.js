@@ -7,6 +7,12 @@ import {
 
 let recording = false;
 
+function triggerPad(pad) {
+  playSound(pad.dataset.sound);
+  pad.classList.add("active");
+  setTimeout(() => pad.classList.remove("active"), 100);
+}
+
 window.addEventListener("keydown", (e) => {
   if (e.repeat) {
     return;
@@ -34,7 +40,9 @@ window.addEventListener("keydown", (e) => {
   }
 
   record(key);
-  playSound(pad.dataset.sound);
-  pad.classList.add("active");
-  setTimeout(() => pad.classList.remove("active"), 100);
+  triggerPad(pad);
+});
+
+document.querySelectorAll(".drum-pad").forEach((pad) => {
+  pad.addEventListener("click", () => triggerPad(pad));
 });
