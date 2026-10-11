@@ -1,4 +1,5 @@
 import { playSound } from "./audio-engine.js";
+import { playRecording } from "./playback.js";
 import { renderLatest } from "./record-log.js";
 import {
   getEvents,
@@ -9,6 +10,22 @@ import {
 } from "./beat-recorder.js";
 
 const recordButton = document.querySelector("#record-btn");
+const padSounds = new Map(
+  Array.from(document.querySelectorAll(".drum-pad"), (pad) => [
+    pad.dataset.key,
+    pad.dataset.sound,
+  ]),
+);
+let stopPlayback;
+
+function lookupSound(key) {
+  return padSounds.get(key);
+}
+
+function playRecordedEvents(events) {
+  stopPlayback?.();
+  stopPlayback = playRecording(events, lookupSound);
+}
 
 function triggerPad(pad) {
   playSound(pad.dataset.sound);
@@ -19,7 +36,7 @@ function triggerPad(pad) {
 function toggleRecording() {
   if (isRecording()) {
     stop();
-    renderLatest(getEvents(), () => {});
+    renderLatest(getEvents(), playRecordedEvents);
   } else {
     start();
   }
@@ -49,7 +66,7 @@ window.addEventListener("keydown", (e) => {
   record(key);
   if (!isRecording()) {
     recordButton.textContent = "Record";
-    renderLatest(getEvents(), () => {});
+    renderLatest(getEvents(), playRecordedEvents);
   }
 
   triggerPad(pad);
