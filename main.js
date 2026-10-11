@@ -1,5 +1,7 @@
 import { playSound } from "./audio-engine.js";
+import { renderLatest } from "./record-log.js";
 import {
+  getEvents,
   isRecording,
   record,
   start,
@@ -17,6 +19,7 @@ function triggerPad(pad) {
 function toggleRecording() {
   if (isRecording()) {
     stop();
+    renderLatest(getEvents(), () => {});
   } else {
     start();
   }
@@ -46,6 +49,7 @@ window.addEventListener("keydown", (e) => {
   record(key);
   if (!isRecording()) {
     recordButton.textContent = "Record";
+    renderLatest(getEvents(), () => {});
   }
 
   triggerPad(pad);
